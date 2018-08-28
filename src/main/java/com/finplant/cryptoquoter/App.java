@@ -1,10 +1,7 @@
-package com.cryptoquoter;
+package com.finplant.cryptoquoter;
 
-/**
- * Hello world!
- *
- */
-public class App 
+
+public class App
 {
     public static void main( String[] args )
     {
