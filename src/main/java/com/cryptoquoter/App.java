@@ -1,4 +1,4 @@
-package cryptoquoter;
+package com.cryptoquoter;
 
 /**
  * Hello world!

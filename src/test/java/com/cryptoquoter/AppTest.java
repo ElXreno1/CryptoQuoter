@@ -1,4 +1,4 @@
-package cryptoquoter;
+package com.cryptoquoter;
 
 import static org.junit.Assert.assertTrue;
 
