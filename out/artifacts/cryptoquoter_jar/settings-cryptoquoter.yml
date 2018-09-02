@@ -1,0 +1,21 @@
+db:
+  url: http://test.com
+  database: mydb
+  user: user
+  password: pas
+flush_period_s: 60
+instruments:
+  - name: BTCUSD
+    instrument: BTC/USD
+  - name: ETHUSD
+    instrument: ETH/USD
+  - name: ETHUSD-synth1
+    instrument: ETH/USD
+    depends:
+      - ETH/BTC
+      - BTC/USD
+  - name: ETHUSD-synth2
+    instrument: ETH/USD
+    depends:
+      - ETH/BCH
+      - USD/BCH
