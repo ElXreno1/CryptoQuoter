@@ -25,12 +25,12 @@ public class App {
         }
 
         Yaml yaml = new Yaml();
-        Yamlconfig yamlConfig = null;
+        Yamlconfig yamlConfig;
 
         try
         {
             InputStream file = new FileInputStream(fileName);
-            yamlConfig =(Yamlconfig) yaml.loadAs(file,Yamlconfig.class);
+            yamlConfig = yaml.loadAs(file,Yamlconfig.class);
         }
         catch (Exception ex)
         {
