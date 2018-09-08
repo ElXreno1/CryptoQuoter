@@ -1,4 +1,4 @@
-package com.finplant.cryptoquoter.Service;
+package com.finplant.cryptoquoter.service;
 
 import org.jasypt.util.text.StrongTextEncryptor;
 

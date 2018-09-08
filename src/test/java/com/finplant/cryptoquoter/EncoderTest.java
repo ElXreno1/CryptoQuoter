@@ -4,7 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.finplant.cryptoquoter.Service.Encoder;
+import com.finplant.cryptoquoter.service.Encoder;
 import org.junit.Test;
 
 

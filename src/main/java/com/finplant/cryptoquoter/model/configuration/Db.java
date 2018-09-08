@@ -1,4 +1,4 @@
-package com.finplant.cryptoquoter.Model.Configuration;
+package com.finplant.cryptoquoter.model.configuration;
 //import com.fasterxml.jackson.*;
 
 

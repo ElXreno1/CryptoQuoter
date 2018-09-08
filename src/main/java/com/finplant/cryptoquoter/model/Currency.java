@@ -1,4 +1,4 @@
-package com.finplant.cryptoquoter.Model;
+package com.finplant.cryptoquoter.model;
 
 public class Currency {
     private String code;

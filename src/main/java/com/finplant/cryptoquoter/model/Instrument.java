@@ -1,8 +1,7 @@
-package com.finplant.cryptoquoter.Model;
+package com.finplant.cryptoquoter.model;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Instrument {
     private String name;
