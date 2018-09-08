@@ -1,19 +1,23 @@
 package com.finplant.cryptoquoter;
 
 import com.finplant.cryptoquoter.model.configuration.Yamlconfig;
+import com.finplant.cryptoquoter.model.entity.QuotesEntity;
 import com.finplant.cryptoquoter.service.Encoder;
-import org.hibernate.HibernateException;
-import org.hibernate.Metamodel;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import com.finplant.cryptoquoter.service.HibernateService;
+import com.finplant.cryptoquoter.service.MainService;
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.yaml.snakeyaml.Yaml;
 
-import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.metamodel.EntityType;
 import java.io.*;
-import java.util.TimeZone;
+import java.util.List;
+
 
 public class App {
 
@@ -35,8 +39,9 @@ public class App {
         return ourSessionFactory.openSession();
     }
 
-    public static void main( String[] args )   {
+    public static void main( String[] args ) throws IOException   {
 
+        System.out.println("constructor");
         if (args.length == 1) {
             if (args[0].equals("-p"))
                 pass();
@@ -46,50 +51,26 @@ public class App {
         }
 
         final Session session = getSession();
+        HibernateService.initDatabase();
+        HibernateService.getAllEntities();
+
         try {
-            System.out.println("querying all the managed entities...");
-            final Metamodel metamodel = session.getSessionFactory().getMetamodel();
-            for (EntityType<?> entityType : metamodel.getEntities()) {
-                final String entityName = entityType.getName();
-                final Query query = session.createQuery("from " + entityName);
-                System.out.println("executing: " + query.getQueryString());
-                for (Object o : query.list()) {
-                    System.out.println("  " + o);
-                }
-            }
-        } finally {
-            session.close();
+            System.out.println("Connection string: " + Yamlconfig.INSTANCE.db);
         }
-
-        Yaml yaml = new Yaml();
-        Yamlconfig yamlConfig;
-
-        try
-        {
-            InputStream file = new FileInputStream(fileName);
-            yamlConfig = yaml.loadAs(file,Yamlconfig.class);
+        catch (Exception ex) {
+            System.out.println("Yaml config not initialized");
         }
-        catch (Exception ex)
-        {
-            System.out.println("Error reading settings file " + fileName);
-            System.out.println(ex.getMessage());
-            ex.printStackTrace(System.out);
-            return;
-        }
-
-        System.out.println( "Connection string: " + yamlConfig.db );
     }
 
     private static void pass() {
         System.out.print( "Please, input password to get encoded password for database: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String rawPass = null;
-        try
-        {
+
+        try   {
             rawPass = br.readLine();
         }
-        catch (IOException ex)
-        {
+        catch (IOException ex)   {
             System.out.println( "Input is incorrect. " + ex.getMessage());
         }
 

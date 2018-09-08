@@ -1,60 +1,41 @@
 package com.finplant.cryptoquoter.model.configuration;
 
+import com.finplant.cryptoquoter.service.MainService;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * YamlConfig read config from yaml file, implements SingleTone
  */
 public class Yamlconfig {
+    private static final String fileName = "settings-cryptoquoter.yml";
+
     public Map<String,Map<String,String>> environment;
     public Db db;
     public Long flush_period_s;
     public List<Instrument> instruments;
-    //static Map<String, Instrument> instruments;
 
-    /**
-     * init configuration from config file, e.g. settings-cryptoquoter.yml
-     * @throws FileNotFoundException
-     * @throws Exception
-     */
-    public static void init() throws FileNotFoundException, Exception {
-        //YamlReader reader = new YamlReader(new FileReader("settings-cryptoquoter.yml"));
-        //YamlConfig asd = new com.esotericsoftware.yamlbeans.YamlConfig();
-        //YamlEntry sd = new com.esotericsoftware.yamlbeans.document.YamlEntry();
-        //reader.
-        //Object db = reader.get("db");
-       // System.out.println(db.toString());
-        /*while (true) {
-            Map obj = (Map) reader.read(Db.class);
-            if (obj == null) break;
-            if (obj.toString() == "db") {
-                Db =
+    public static final Yamlconfig INSTANCE = getYamlconfig();
 
-            }
-            for (Object key: instruments.keySet()) {
-                System.out.println(key.toString());
+    private static Yamlconfig getYamlconfig() {
+        Yaml yaml = new Yaml();
+        Yamlconfig yamlConfig = null;
 
-            }
-
+        try
+        {
+            InputStream file = new FileInputStream(fileName);
+            yamlConfig = yaml.loadAs(file,Yamlconfig.class);
         }
-        */
-
+        catch (IOException ex)
+        {
+            MainService.handleError("Error reading settings file " + fileName, ex);
+        }
+        return yamlConfig;
     }
-/*
-    public static String getUrl() {
-        return url;
-    }
-    public static String getUser() {
-        return user;
-    }
-    public static String getPassword() {
-        return password;
-    }
-    */
-    //public static Long getFlushPeriod() {
-     //   return flushPeriod;
- //   }
-
 }
