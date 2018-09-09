@@ -1,5 +1,6 @@
 package com.finplant.cryptoquoter.service;
 
+import com.finplant.cryptoquoter.model.configuration.Yamlconfig;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import org.apache.log4j.LogManager;
@@ -15,6 +16,7 @@ import javax.persistence.metamodel.EntityType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Properties;
 
 public class HibernateService {
 
@@ -23,13 +25,24 @@ public class HibernateService {
 
     static {
         try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
+            Configuration cfg = new Configuration();
+            cfg.configure();
 
-            ourSessionFactory = configuration.buildSessionFactory();
+            Yamlconfig yamlCfg = Yamlconfig.INSTANCE;
+            Properties props = cfg.getProperties();
+            props.setProperty("hibernate.connection.url", formUrl(yamlCfg.db.url, yamlCfg.db.database));
+            props.setProperty("hibernate.connection.password", Encoder.INSTANCE.Decode(yamlCfg.db.password));
+            props.setProperty("hibernate.connection.username", yamlCfg.db.user);
+
+            ourSessionFactory = cfg.buildSessionFactory();
         } catch (Throwable ex) {
+            logger.error("Can't initialize connection. Please, check config file");
             throw new ExceptionInInitializerError(ex);
         }
+    }
+
+    private static String formUrl(String server, String db) {
+        return "jdbc:mysql://"+ server+":3306/" + db + "?seTimezone=true&serverTimezone=UTC&useSSL=false";
     }
 
     public static SessionFactory getSessionFactory() {
