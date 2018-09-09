@@ -6,10 +6,10 @@
     <session-factory>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <!--<property name="hibernate.jdbc.time_zone" value="UTC"/> -->
-        <property name="connection.url">jdbc:mysql://localhost:3306/quotes?useTimezone=true&amp;serverTimezone=UTC</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/quotes?useTimezone=true&amp;serverTimezone=UTC&amp;useSSL=false</property>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="connection.username">root</property>
-        <property name="connection.password">denisfallas</property>
+        <property name="connection.password">*****</property>
 
         <mapping class="com.finplant.cryptoquoter.model.entity.QuotesEntity"/>
         <mapping resource="QuotesEntity.hbm.xml"/>

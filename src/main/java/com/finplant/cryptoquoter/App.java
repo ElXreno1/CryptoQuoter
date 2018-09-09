@@ -23,8 +23,7 @@ public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
 
     public static void main( String[] args )  {
-
-        DOMConfigurator.configure("log4j.xml");
+        init();
 
         if (args.length == 1) {
             if (args[0].equals("-p"))
@@ -51,6 +50,11 @@ public class App {
         }
 
         logger.info("quit");
+    }
+
+    private static void init() {
+        System.setProperty( "com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
+        DOMConfigurator.configure("log4j.xml");
     }
 
     private static void pass() {
