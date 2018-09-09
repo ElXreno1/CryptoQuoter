@@ -32,6 +32,10 @@ public class HibernateService {
         }
     }
 
+    public static SessionFactory getSessionFactory() {
+        return ourSessionFactory;
+    }
+
     public static Session getSession() throws HibernateException {
         return ourSessionFactory.openSession();
     }
@@ -39,7 +43,8 @@ public class HibernateService {
     /**
      * initializion of database by create.sql script
      */
-    public static void initDatabase()  {
+    public static void initDatabase() {
+
         Session session = getSession();
         try {
             ClassLoader classloader = HibernateService.class.getClassLoader();
@@ -64,6 +69,7 @@ public class HibernateService {
      * print all entities from database using hibernate
      */
     public static void getAllEntities() {
+
         Session session = getSession();
         try {
             logger.info("querying all the managed entities...");

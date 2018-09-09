@@ -42,11 +42,15 @@ public class App {
             return;
         }
 
-        HibernateService.initDatabase();
-        HibernateService.getAllEntities();
+        try {
+            HibernateService.initDatabase();
+            HibernateService.getAllEntities();
+        }
+        finally {
+            HibernateService.getSessionFactory().close();
+        }
 
         logger.info("quit");
-
     }
 
     private static void pass() {
