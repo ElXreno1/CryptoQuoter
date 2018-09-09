@@ -2,6 +2,8 @@ package com.finplant.cryptoquoter.service;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Metamodel;
 import org.hibernate.Session;
@@ -17,6 +19,7 @@ import java.io.InputStreamReader;
 public class HibernateService {
 
     private static final SessionFactory ourSessionFactory;
+    private static final Logger logger = LogManager.getLogger(HibernateService.class);
 
     static {
         try {
@@ -33,10 +36,13 @@ public class HibernateService {
         return ourSessionFactory.openSession();
     }
 
+    /**
+     * initializion of database by create.sql script
+     */
     public static void initDatabase()  {
         Session session = getSession();
         try {
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            ClassLoader classloader = HibernateService.class.getClassLoader();
 
             InputStream is = classloader.getResourceAsStream("create.sql");
             String result = CharStreams.toString(new InputStreamReader(is, Charsets.UTF_8));
@@ -54,18 +60,21 @@ public class HibernateService {
         }
     }
 
+    /**
+     * print all entities from database using hibernate
+     */
     public static void getAllEntities() {
         Session session = getSession();
         try {
-            System.out.println("querying all the managed entities...");
+            logger.info("querying all the managed entities...");
             final Metamodel metamodel = session.getSessionFactory().getMetamodel();
             for (EntityType<?> entityType : metamodel.getEntities()) {
                 final String entityName = entityType.getName();
                 final Query query = session.createQuery("from " + entityName);
 
-                System.out.println("executing: " + query.getQueryString());
+                logger.info("executing: " + query.getQueryString());
                 for (Object o : query.list()) {
-                    System.out.println("  " + o);
+                    logger.info("  " + o);
                 }
             }
         }

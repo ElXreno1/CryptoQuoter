@@ -1,47 +1,31 @@
 package com.finplant.cryptoquoter;
 
 import com.finplant.cryptoquoter.model.configuration.Yamlconfig;
-import com.finplant.cryptoquoter.model.entity.QuotesEntity;
 import com.finplant.cryptoquoter.service.Encoder;
 import com.finplant.cryptoquoter.service.HibernateService;
 import com.finplant.cryptoquoter.service.MainService;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import org.yaml.snakeyaml.Yaml;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.metamodel.EntityType;
 import java.io.*;
-import java.util.List;
 
 
 public class App {
 
     private static String fileName = "settings-cryptoquoter.yml";
-    private static final SessionFactory ourSessionFactory;
+    private static final Logger logger = LogManager.getLogger(App.class);
 
-    static {
-        try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
+    public static void main( String[] args )  {
 
-            ourSessionFactory = configuration.buildSessionFactory();
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
+        DOMConfigurator.configure("log4j.xml");
 
-    public static Session getSession() throws HibernateException {
-        return ourSessionFactory.openSession();
-    }
-
-    public static void main( String[] args ) throws IOException   {
-
-        System.out.println("constructor");
         if (args.length == 1) {
             if (args[0].equals("-p"))
                 pass();
@@ -50,16 +34,19 @@ public class App {
             return;
         }
 
-        final Session session = getSession();
+        try {
+            logger.info("Connection string: " + Yamlconfig.INSTANCE.db);
+        }
+        catch (Exception ex) {
+            logger.error("Yaml config not initialized");
+            return;
+        }
+
         HibernateService.initDatabase();
         HibernateService.getAllEntities();
 
-        try {
-            System.out.println("Connection string: " + Yamlconfig.INSTANCE.db);
-        }
-        catch (Exception ex) {
-            System.out.println("Yaml config not initialized");
-        }
+        logger.info("quit");
+
     }
 
     private static void pass() {
