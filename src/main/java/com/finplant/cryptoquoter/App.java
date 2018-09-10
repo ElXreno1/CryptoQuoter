@@ -1,19 +1,21 @@
 package com.finplant.cryptoquoter;
 
 import com.finplant.cryptoquoter.model.configuration.Yamlconfig;
+import com.finplant.cryptoquoter.service.streaming.BinanceStreamer;
 import com.finplant.cryptoquoter.service.Encoder;
 import com.finplant.cryptoquoter.service.HibernateService;
-import com.finplant.cryptoquoter.service.MainService;
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
+import com.finplant.cryptoquoter.service.streaming.PolonexStreamer;
+import com.finplant.cryptoquoter.service.streaming.StreamingService;
+import info.bitrich.xchangestream.core.StreamingExchange;
+import info.bitrich.xchangestream.core.StreamingExchangeFactory;
+import info.bitrich.xchangestream.poloniex.PoloniexStreamingExchange;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.hibernate.*;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
+import org.knowm.xchange.currency.Currency;
+import org.knowm.xchange.currency.CurrencyPair;
+import org.slf4j.LoggerFactory;
 
-import javax.persistence.metamodel.EntityType;
 import java.io.*;
 
 
@@ -21,6 +23,8 @@ public class App {
 
     private static String fileName = "settings-cryptoquoter.yml";
     private static final Logger logger = LogManager.getLogger(App.class);
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(PolonexStreamer.class);
 
     public static void main( String[] args )  {
         init();
@@ -49,7 +53,13 @@ public class App {
             HibernateService.getSessionFactory().close();
         }
 
-        logger.info("quit");
+        StreamingService.INSTANCE.startStreaming();
+
+        try {
+            Thread.sleep(Yamlconfig.INSTANCE.flush_period_s);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void init() {
@@ -61,15 +71,15 @@ public class App {
         System.out.print( "Please, input password to get encoded password for database: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String rawPass = null;
+        String encPass = null;
 
         try   {
-            rawPass = br.readLine();
+            encPass = Encoder.INSTANCE.Encode(br.readLine());
         }
         catch (IOException ex)   {
             System.out.println( "Input is incorrect. " + ex.getMessage());
         }
 
-        String encPass = Encoder.INSTANCE.Encode(rawPass);
         System.out.println("Encoded password: " + encPass);
     }
 

@@ -74,6 +74,36 @@
       <artifactId>guava</artifactId>
       <version>26.0-jre</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/info.bitrich.xchange-stream/xchange-stream-core -->
+    <dependency>
+      <groupId>info.bitrich.xchange-stream</groupId>
+      <artifactId>xchange-stream-core</artifactId>
+      <version>4.3.2</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/info.bitrich.xchange-stream/xchange-binance -->
+    <dependency>
+      <groupId>info.bitrich.xchange-stream</groupId>
+      <artifactId>xchange-binance</artifactId>
+      <version>4.3.2</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/info.bitrich.xchange-stream/xchange-poloniex -->
+    <dependency>
+      <groupId>info.bitrich.xchange-stream</groupId>
+      <artifactId>xchange-poloniex</artifactId>
+      <version>4.3.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.25</version>
+    </dependency>
   </dependencies>
   <build>
     <resources>

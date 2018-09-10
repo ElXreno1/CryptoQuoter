@@ -91,9 +91,9 @@ public class HibernateService {
                 final String entityName = entityType.getName();
                 final Query query = session.createQuery("from " + entityName);
 
-                logger.info("executing: " + query.getQueryString());
+                System.out.println("executing: " + query.getQueryString());
                 for (Object o : query.list()) {
-                    logger.info("  " + o);
+                    System.out.println("\t" + o);
                 }
             }
         }
