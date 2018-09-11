@@ -42,8 +42,12 @@ public class StreamingService {
 
     public void startStreaming() {
         List<Thread> pool = new ArrayList<>(streamers.size());
-        Runnable r = () -> { streamers.get(1).stream();  };
-        pool.add(new Thread(r));
+        for (Streamer streamer: streamers ) {
+            Runnable r = () -> { streamer.stream();  };
+            pool.add(new Thread(r));
+        }
+        //Runnable r = () -> { streamers.get(1).stream();  };
+        //pool.add(new Thread(r));
 
         for(Thread thread: pool)
             thread.start();

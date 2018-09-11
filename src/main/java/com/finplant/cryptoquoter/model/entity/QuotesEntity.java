@@ -7,7 +7,9 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "quotes", schema = "quotes")
 public class QuotesEntity {
-    @GeneratedValue(strategy=GenerationType.SEQUENCE)
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE)
+    @Column(name = "id", updatable = false, nullable = false)
     private int id;
     private Timestamp time;
     private BigDecimal bid;
@@ -15,8 +17,6 @@ public class QuotesEntity {
     private String exchange;
     private String name;
 
-    @Id
-    @Column(name = "ID", nullable = false)
     public int getId() {
         return id;
     }

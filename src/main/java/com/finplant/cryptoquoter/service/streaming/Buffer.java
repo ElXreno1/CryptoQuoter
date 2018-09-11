@@ -5,6 +5,7 @@ import com.finplant.cryptoquoter.service.HibernateService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
@@ -74,8 +75,10 @@ public class Buffer {
         Session session = HibernateService.getSession();
         try {
             session.beginTransaction();
-            for (QuotesEntity quote : quotesToDb)
+            for (QuotesEntity quote : quotesToDb) {
+                session.buildLockRequest(LockOptions.NONE).lock(quote);
                 session.merge(quote);
+            }
             session.getTransaction().commit();
         }
         catch (HibernateException ex) {
