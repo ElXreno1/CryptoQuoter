@@ -31,6 +31,8 @@ public class BinanceStreamer extends Streamer{
         ProductSubscription subscription = builder.build();
         exchange.connect(subscription).blockingAwait();
 
+        startFlushThread();
+
         for(CurrencyPair currencyPair: getCurrencyPairs()) {
             getData(currencyPair);
         }
@@ -53,7 +55,7 @@ public class BinanceStreamer extends Streamer{
         try {
             Thread.sleep(intervalMs);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("Getting data error", e);
         }
     }
 }

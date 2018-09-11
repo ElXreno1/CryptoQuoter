@@ -104,6 +104,6 @@ public class QuotesEntity {
 
     @Override
     public String toString() {
-        return name + ": " + exchange  + ", [" + bid + ", " + ask + "] from " + this.time;
+        return exchange + ": " + name + ", [" + bid + ", " + ask + "] from " + this.time;
     }
 }

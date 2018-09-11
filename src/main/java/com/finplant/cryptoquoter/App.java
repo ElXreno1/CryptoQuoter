@@ -45,13 +45,8 @@ public class App {
             return;
         }
 
-        try {
-            HibernateService.initDatabase();
-            HibernateService.getAllEntities();
-        }
-        finally {
-            HibernateService.getSessionFactory().close();
-        }
+        HibernateService.initDatabase();
+        HibernateService.getAllEntities();
 
         StreamingService.INSTANCE.startStreaming();
 

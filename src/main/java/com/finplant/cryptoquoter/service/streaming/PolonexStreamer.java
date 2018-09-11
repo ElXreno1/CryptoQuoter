@@ -1,5 +1,6 @@
 package com.finplant.cryptoquoter.service.streaming;
 
+import com.finplant.cryptoquoter.model.configuration.Yamlconfig;
 import info.bitrich.xchangestream.core.StreamingExchange;
 import info.bitrich.xchangestream.core.StreamingExchangeFactory;
 import info.bitrich.xchangestream.poloniex.PoloniexStreamingExchange;
@@ -23,6 +24,9 @@ public class PolonexStreamer extends Streamer{
         LOG.info("Polonex stream started");
         exchange = StreamingExchangeFactory.INSTANCE.createExchange(PoloniexStreamingExchange.class.getName());
         exchange.connect().blockingAwait();
+
+        startFlushThread();
+
         for(CurrencyPair currencyPair: getCurrencyPairs()) {
             getData(currencyPair);
         }
@@ -42,7 +46,7 @@ public class PolonexStreamer extends Streamer{
         try {
             Thread.sleep(intervalMs);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("Getting data error", e);
         }
     }
 }

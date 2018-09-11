@@ -1,5 +1,6 @@
 package com.finplant.cryptoquoter.service.streaming;
 
+import com.finplant.cryptoquoter.model.configuration.Yamlconfig;
 import com.finplant.cryptoquoter.model.entity.QuotesEntity;
 import info.bitrich.xchangestream.core.StreamingExchange;
 import org.knowm.xchange.currency.Currency;
@@ -7,6 +8,8 @@ import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -17,6 +20,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class Streamer {
+    private final Logger LOG = LoggerFactory.getLogger(Streamer.class);
+
     protected List<CurrencyPair> currencyPairs;
     protected String exchangeName;
     protected StreamingExchange exchange;
@@ -53,6 +58,21 @@ public abstract class Streamer {
         return  result;
     }
 
+    public void startFlushThread() {
+        Runnable r = () -> {
+            try {
+                while (true) {
+                    Thread.sleep(Yamlconfig.INSTANCE.flush_period_s * 1000);
+                    Buffer.INSTANCE.flush();
+                }
+            }
+            catch (InterruptedException e) {
+                LOG.error("Attempt to flush data throws error. ", e);
+            }
+        };
+        new Thread(r).start();
+    }
+
     public void putTickerToBuffer(Ticker ticker) {
         QuotesEntity quote = new QuotesEntity();
         BigDecimal bid = ticker.getAsk();
@@ -68,6 +88,7 @@ public abstract class Streamer {
                 ticker.getCurrencyPair().counter.getCurrencyCode());
         Buffer.INSTANCE.putQuote(quote);
     }
+
     public void putOrderBookToBuffer(OrderBook orderBook) {
         List<LimitOrder> bids = orderBook.getBids();
         List<LimitOrder> asks = orderBook.getAsks();
