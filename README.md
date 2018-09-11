@@ -26,6 +26,8 @@ instruments:
 </pre>
 Password must be encrypted. You can ecrypted data for DB password using cryptoquoter with -p key.
   
+Everything info about streaming work saves to /log/system.log file. Logging uses log4j lib.
+  
 First run makes table quotes in DB if there is not exist.  
 
 flush_period_s set period to flush data from memory buffer to DB.
