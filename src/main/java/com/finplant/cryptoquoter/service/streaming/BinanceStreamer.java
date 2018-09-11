@@ -1,5 +1,6 @@
 package com.finplant.cryptoquoter.service.streaming;
 
+import com.finplant.cryptoquoter.model.configuration.Yamlconfig;
 import info.bitrich.xchangestream.binance.BinanceStreamingExchange;
 import info.bitrich.xchangestream.core.ProductSubscription;
 import info.bitrich.xchangestream.core.StreamingExchange;
@@ -31,7 +32,7 @@ public class BinanceStreamer extends Streamer{
         ProductSubscription subscription = builder.build();
         exchange.connect(subscription).blockingAwait();
 
-        startFlushThread();
+        //startFlushThread();
 
         for(CurrencyPair currencyPair: getCurrencyPairs()) {
             getData(currencyPair);

@@ -2,6 +2,8 @@ package com.finplant.cryptoquoter.service.streaming;
 
 import com.finplant.cryptoquoter.model.configuration.Instrument;
 import com.finplant.cryptoquoter.model.configuration.Yamlconfig;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
@@ -11,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StreamingService {
+    private static final Logger logger = LogManager.getLogger(StreamingService.class);
+
     private List<Streamer> streamers = new ArrayList<Streamer>();
     public static final StreamingService INSTANCE = new StreamingService();
 
@@ -43,5 +47,19 @@ public class StreamingService {
 
         for(Thread thread: pool)
             thread.start();
+
+        while (true) {
+            try {
+                while (true) {
+                    Thread.sleep(Yamlconfig.INSTANCE.flush_period_s * 1000);
+                    logger.info("Flushing data to DB");
+                    Buffer.INSTANCE.flush();
+                }
+            }
+            catch (InterruptedException e) {
+                logger.error("Attempt to flush data throws error. ", e);
+            }
+        }
+
     }
 }

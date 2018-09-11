@@ -25,7 +25,7 @@ public class PolonexStreamer extends Streamer{
         exchange = StreamingExchangeFactory.INSTANCE.createExchange(PoloniexStreamingExchange.class.getName());
         exchange.connect().blockingAwait();
 
-        startFlushThread();
+        //startFlushThread();
 
         for(CurrencyPair currencyPair: getCurrencyPairs()) {
             getData(currencyPair);
