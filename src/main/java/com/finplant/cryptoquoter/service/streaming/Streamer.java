@@ -62,7 +62,9 @@ public abstract class Streamer {
         Runnable r = () -> {
             try {
                 while (true) {
+
                     Thread.sleep(Yamlconfig.INSTANCE.flush_period_s * 1000);
+                    LOG.info("Flushing data to DB");
                     Buffer.INSTANCE.flush();
                 }
             }

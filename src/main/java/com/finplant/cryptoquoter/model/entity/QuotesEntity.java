@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "quotes", schema = "quotes")
 public class QuotesEntity {
+    @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private int id;
     private Timestamp time;
     private BigDecimal bid;

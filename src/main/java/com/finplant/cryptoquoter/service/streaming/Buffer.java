@@ -4,6 +4,7 @@ import com.finplant.cryptoquoter.model.entity.QuotesEntity;
 import com.finplant.cryptoquoter.service.HibernateService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
@@ -61,7 +62,6 @@ public class Buffer {
                 quotesToDb.addAll(quotes);
                 quotes.clear();
             }
-
         }
         catch (InterruptedException ex) {
             logger.error("Error flushing buffer. ", ex);
@@ -73,8 +73,17 @@ public class Buffer {
 
         Session session = HibernateService.getSession();
         try {
+            session.beginTransaction();
             for (QuotesEntity quote : quotesToDb)
-                session.saveOrUpdate(quote);
+                session.merge(quote);
+            session.getTransaction().commit();
+        }
+        catch (HibernateException ex) {
+            logger.error("Error flushing data", ex);
+            session.getTransaction().rollback();
+        }
+        catch (Exception ex) {
+            logger.error("Error flushing data", ex);
         }
         finally {
             session.close();
